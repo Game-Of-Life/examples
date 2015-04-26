@@ -29,40 +29,48 @@ def frame(a,b,list):
 def iter(old,span):
 #executes one iteration of the rules of Conway's Game of Life
 	new = {}
-	for i in range(span-1):
-		for j in range(span-1):
+	for i in range(span):
+		for j in range(span):
 			new[i+1,j+1] = delta(frame(i+1,j+1,old),2) * old[i+1,j+1] + delta(frame(i+1,j+1,old),3)
 			#stores the state of the cell at the next iteration in new
-	for i in range(span-1):
-		for j in range(span-1):
+	for i in range(span):
+		for j in range(span):
 			old[i+1,j+1] = new[i+1,j+1]
 	return 0
-def init(eggs,spam):
-	for i in range(spam+1):
-		for j in range(spam+1):
-			eggs[i,j] = 0
+def init(list,span):
+	for i in range(span+2):
+		for j in range(span+2):
+			list[i,j] = 0
 	#initializes as null
 	return 0
 def display(list,span):
-	for i in range(span-1):
-		s = ""
-		for j in range(span-1):
+	for i in range(span):
+		s = ''
+		for j in range(span):
 			s = s + str(life[i+1,j+1])
 		print s
+		#makes and prints a string that represents one row on the grid
 life = {}
-init(life,50)
+print 'Enter the size of the grid'
+g = int(raw_input(''))
+init(life,g)
 print 'Define initial conditions'
 #allows user to input a custom starting colony
-print 'put dashes, spaces, or underscores between different coordinates'
+print 'Put dashes, spaces, or underscores between numbers'
 print 'An example would be: 13 11 34 15 32 5 1 11'
 s = raw_input('')
 s.replace('-',' ')
 s.replace('_',' ')
 slist = s.split(' ')
 for i in range(0,len(slist),2):
-	flip(int(slist[i]),int(slist[i+1]),life)
+	flip(int(slist[i+1]),int(slist[i]),life)
+	#changes the state of the (ith,ith+1th) cell
+	#repeating the same coordinate an even # of times does not change its state
+	#repeating the same coordinate an odd # of times does change its state
 print 'How many iterations?'
 h = int(raw_input(''))
 for i in range(h):
-	display(life,50)
-	iter(life,50)
+	display(life,g)
+	iter(life,g)
+#prints the grid before iterating it
+#this results in an extra iteration, but said generation is never printed

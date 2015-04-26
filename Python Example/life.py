@@ -2,10 +2,6 @@
 #this program is a python command line implementation of conway's game of life
 #this will only serve as a proof-of-concept and should be kept separate from the 'source' repository
 #enjoy
-
-#Import a logger
-import logs
-
 def flip(a,b,list):
 	#changes the state of a cell
 	c = list[a,b]
@@ -30,79 +26,51 @@ def frame(a,b,list):
 	c = c - list[a,b]
 	#undoes the inclusion of list[a,b] in the sum
 	return c
-def iter(old,new,span,pan):
+def iter(old,span):
 #executes one iteration of the rules of Conway's Game of Life
-	for i in range(span-1):
-		s = ''
-		t = ''
-		for j in range(span-1):
-			s = s + str(old[i+1,j+1])
-			t = t + str(new[i+1,j+1])
+	new = {}
+	for i in range(span):
+		for j in range(span):
 			new[i+1,j+1] = delta(frame(i+1,j+1,old),2) * old[i+1,j+1] + delta(frame(i+1,j+1,old),3)
 			#stores the state of the cell at the next iteration in new
-		print s
-		#if (pan == 1):
-		#	'log.txt'.write(s + '\n')
-		#	'log.txt'.write(t + '\n')
-		#else:
-		#	pass
-	for i in range(span-1):
-		for j in range(span-1):
-			(old[i+1,j+1],new[i+1,j+1]) = (new[i+1,j+1], old[i+1,j+1])
-	#swaps old and new
+	for i in range(span):
+		for j in range(span):
+			old[i+1,j+1] = new[i+1,j+1]
 	return 0
-def init(eggs,spam,span):
-	for i in range(span+1):
-		for j in range(span+1):
-			eggs[i,j] = 0
-			spam[i,j] = 0
+def init(list,span):
+	for i in range(span+2):
+		for j in range(span+2):
+			list[i,j] = 0
 	#initializes as null
 	return 0
-coordinates = ['coordinates','coords','ordinals','pairs']
-strings = ['string','str','word','code','seed','data']
+def display(list,span):
+	for i in range(span):
+		s = ''
+		for j in range(span):
+			s = s + str(life[i+1,j+1])
+		print s
+		#makes and prints a string that represents one row on the grid
 life = {}
-efil = {}
-init(life,efil,50)
+print 'Enter the size of the grid'
+g = int(raw_input(''))
+init(life,g)
 print 'Define initial conditions'
 #allows user to input a custom starting colony
-print 'Do you want to input individual coordinates or use a string?'
-#individual coordinates requires the input of a single pair of numbers at a time
-#a string allows multiple cell coordinates to be flipped at a time
+print 'Put dashes, spaces, or underscores between numbers'
+print 'An example would be: 13 11 34 15 32 5 1 11'
 s = raw_input('')
-if (s in coordinates):
-	while True:
-		print 'finished?'
-		s = raw_input('')
-		if (s == 'no') or (s == 'No'):
-			i = int(raw_input('x-coord:'))
-			j = int(raw_input('y-coord:'))
-			flip(i,j,life)
-		else:
-			print 'How many iterations?'
-			h = int(raw_input(''))
-			#print 'logit?'
-			#s = raw_input('')
-			#logit = delta(s,'yes') + delta(s,'Yes')
-			logit = 0
-			break
-elif (s in strings):
-	print 'put dashes, spaces, or underscores between different coordinates'
-	print 'An example would be: 13 11 34 15 32 5 1 11'
-	s = raw_input('')
-	s.replace('-',' ')
-	s.replace('_',' ')
-	slist = s.split(' ')
-	for i in range(0,len(slist),2):
-		flip(int(slist[i]),int(slist[i+1]),life)
-	print 'How many iterations?'
-	h = int(raw_input(''))
-	#print 'logit?'
-	#s = raw_input('')
-	#logit = delta(s,'yes') + delta(s,'Yes')
-	logit = 0
-else:
-	raise ValueError('"%s" is not a valid option' % s)
-#open('log.txt','a')
+s.replace('-',' ')
+s.replace('_',' ')
+slist = s.split(' ')
+for i in range(0,len(slist),2):
+	flip(int(slist[i+1]),int(slist[i]),life)
+	#changes the state of the (ith,ith+1th) cell
+	#repeating the same coordinate an even # of times does not change its state
+	#repeating the same coordinate an odd # of times does change its state
+print 'How many iterations?'
+h = int(raw_input(''))
 for i in range(h):
-	iter(life,efil,50,logit)
-#'log.txt'.close()
+	display(life,g)
+	iter(life,g)
+#prints the grid before iterating it
+#this results in an extra iteration, but said generation is never printed
