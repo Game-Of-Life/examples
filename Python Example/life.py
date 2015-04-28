@@ -2,29 +2,15 @@
 #this program is a python command line implementation of conway's game of life
 #this will only serve as a proof-of-concept and should be kept separate from the 'source' repository
 #enjoy
-def flip(a,b,list):
-	#changes the state of a cell
-	c = list[a,b]
-	list[a,b] = 1 - c
-	return 0
-def delta(a,b):
-	#compares a and b
-	#if delta(a,b) = 1 then for all c != b, delta(a,c) = 0
-	#this allows for a mathematical expression of 'this or that' as delta(x,this) + delta(x,that)
-	c = 0
-	if (a == b):
-		c = 1
-	else:
-		pass
-	return c
+flip = lambda x,y,z: 1-z[x,y]
+delta = lambda x,y: 1 if x == y else 0
 def frame(a,b,list):
-	#sums the neighbors of [a,b] in the list 'list'
+	#sums the neighbors of [a,b]
 	c = 0
-	for u in (-1,0,1):
-		for v in (-1,0,1):
-			c = list[a+u,b+v] + c
+	for i in (-1,0,1):
+		for j in (-1,0,1):
+			c = list[a+i,b+j] + c
 	c = c - list[a,b]
-	#undoes the inclusion of list[a,b] in the sum
 	return c
 def iter(old,span):
 #executes one iteration of the rules of Conway's Game of Life
@@ -63,7 +49,9 @@ s.replace('-',' ')
 s.replace('_',' ')
 slist = s.split(' ')
 for i in range(0,len(slist),2):
-	flip(int(slist[i+1]),int(slist[i]),life)
+	m = int(slist[i+1])
+	n = int(slist[i])
+	life[m,n] = flip(m,n,life)
 	#changes the state of the (ith,ith+1th) cell
 	#repeating the same coordinate an even # of times does not change its state
 	#repeating the same coordinate an odd # of times does change its state
