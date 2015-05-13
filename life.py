@@ -17,6 +17,7 @@ def iter(old,span):
 	new = {}
 	for i in range(span):
 		for j in range(span):
+			#computes the next generation cell by cell
 			new[i+1,j+1] = delta(frame(i+1,j+1,old),2) * old[i+1,j+1] + delta(frame(i+1,j+1,old),3)
 			#stores the state of the cell at the next iteration in new
 	for i in range(span):
@@ -25,6 +26,8 @@ def iter(old,span):
 	return 0
 def init(list,span):
 	for i in range(span+2):
+		#the two extra rows and columbs make a border around the grid
+		#this avoids the problem of frame() trying to call the value of an out-of-range key
 		for j in range(span+2):
 			list[i,j] = 0
 	#initializes as null
@@ -62,3 +65,4 @@ for i in range(h):
 	iter(life,g)
 #prints the grid before iterating it
 #this results in an extra iteration, but said generation is never printed
+#this also quickly fills the console with 1's and 0's
